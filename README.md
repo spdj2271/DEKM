@@ -15,6 +15,9 @@ python DeepKmeans.py
 ```
 
 3)  Launch an experiment other dataset, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
+```
+python DeepKmeans.py USPS
+```
 
 
 
