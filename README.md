@@ -7,14 +7,15 @@ DeepKmeans
 ```
 git clone https://github.com/spdj2271/DeepKmeans.git DeepKmeans
 ```
+2) Run python Deepkmeans.py  to run experiment. The dataset is specified by $ds_name$ in Deepkmeans.py, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
 
-2) Data preparation.
-'MNIST' data set does not need to be prepared separately, thank to tensorflow. 
 ```
 cd DeepKmeans
+python DeepKmeans.py
 ```
 
-3) Run python Deepkmeans.py  to run experiment. The dataset is specified by $ds_name$ in Deepkmeans.py, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
+3) Other dataset
+'MNIST' data set does not need to be prepared separately, thank to tensorflow. 
 
 ## Result
 Best result of five runs:
