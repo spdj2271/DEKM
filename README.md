@@ -2,7 +2,7 @@
 DeepKmeans
 
 ## Usage
-Run python deepkmeans.py  to run experiment. The dataset is specified by $ds_name$, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
+Run python Deepkmeans.py  to run experiment. The dataset is specified by $ds_name$, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
 
 ## Result
 Best result of five runs:
