@@ -5,7 +5,7 @@ DeepKmeans
 1) Data preparation.
 'MNIST' data set does not need to be prepared separately, thank to tensorflow. 
 
-2)Run python Deepkmeans.py  to run experiment. The dataset is specified by $ds_name$ in Deepkmeans.py, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
+2) Run python Deepkmeans.py  to run experiment. The dataset is specified by $ds_name$ in Deepkmeans.py, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
 
 ## Result
 Best result of five runs:
