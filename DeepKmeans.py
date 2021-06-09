@@ -43,7 +43,7 @@ def get_xy(ds_type='MNIST', x_flatten=False, is_print=True):
         y = np.concatenate((y_train, y_test))
         x = np.expand_dims(np.divide(x, 255.), -1)
     elif ds_type == 'USPS':
-        with h5py.File('USPS.h5', 'r') as hf:
+        with h5py.File('dataset_USPS.h5', 'r') as hf:
             train = hf.get('train')
             X_tr = train.get('data')[:]
             y_tr = train.get('target')[:]
