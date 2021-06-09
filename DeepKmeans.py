@@ -1,12 +1,16 @@
+import csv
+import os
+
 import h5py
 import numpy as np
 import tensorflow as tf
-from keras.initializers import VarianceScaling
+from scipy.optimize import linear_sum_assignment as linear_assignment
 from sklearn.cluster import KMeans
 from tensorflow.keras import layers
 from tensorflow.keras import losses
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Model
+from tensorflow.python.keras.initializers.initializers_v2 import VarianceScaling
 
 
 def get_ACC_NMI(y, y_pred):
@@ -37,13 +41,13 @@ def get_ACC_NMI(y, y_pred):
     return acc, nmi
 
 
-def get_xy(ds_type='MNIST', x_flatten=False):
-    if ds_type == 'MNIST':
+def get_xy(ds_name='MNIST', x_flatten=False, is_print=True):
+    if ds_name == 'MNIST':
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
         x = np.concatenate((x_train, x_test))
         y = np.concatenate((y_train, y_test))
         x = np.expand_dims(np.divide(x, 255.), -1)
-    elif ds_type == 'USPS':
+    elif ds_name == 'USPS':
         with h5py.File('USPS.h5', 'r') as hf:
             train = hf.get('train')
             X_tr = train.get('data')[:]
@@ -54,8 +58,8 @@ def get_xy(ds_type='MNIST', x_flatten=False):
         x = np.concatenate([X_tr, X_te], 0)
         y = np.concatenate([y_tr, y_te], 0)
         x = np.reshape(x, (len(x), 16, 16)).astype(np.float32)
-    elif ds_type == 'COIL20':
-        f = h5py.File('COIL.h5', 'r')
+    elif ds_name == 'COIL20':
+        f = h5py.File('COIL20.h5', 'r')
         x = np.array(f['data'][()]).squeeze()
         x = np.expand_dims(np.swapaxes(x, 1, 2).astype(np.float32), -1)
         x = x / 255.
@@ -65,14 +69,27 @@ def get_xy(ds_type='MNIST', x_flatten=False):
         x = x[index]
         y = y[index]
         x = tf.image.resize(x, [28, 28]).numpy()
+    elif ds_name == 'FRGC':
+        with h5py.File('FRGC.h5', 'r') as hf:
+            data = hf.get('data')[:]
+            data = np.swapaxes(data, 1, 3)
+            x = data / 255.
+            y = hf.get('labels')[:]
+            y_unique = np.unique(y)
+            for i in range(len(y_unique)):
+                y[y == y_unique[i]] = i
+            index = np.random.permutation(len(x))
+            x = x[index]
+            y = y[index]
     if x_flatten:
         x = x.reshape((x.shape[0], -1))
-    print(ds_type)
+    if is_print:
+        print(ds_name)
     return x, y
 
 
-def get_dataset_xx(ds_type='MNIST', x_flatten=False):
-    x, _ = get_xy(ds_type=ds_type, x_flatten=x_flatten)
+def get_dataset_xx(ds_name='MNIST', x_flatten=False, is_print=True):
+    x, _ = get_xy(ds_name=ds_name, x_flatten=x_flatten, is_print=is_print)
     ds = tf.data.Dataset.from_tensor_slices((x, x))
     return ds
 
@@ -93,8 +110,8 @@ def model_conv(load_weights=True):
     x = layers.Conv2D(filters[2], kernel_size=3, strides=2, padding=pad3, activation='relu', kernel_initializer=init)(x)
     x = layers.Flatten()(x)
     x = layers.Dense(units=filters[-1], name='embed')(x)
-    # x = tf.divide(x, tf.expand_dims(tf.norm(x, 2, -1), -1))
-
+    # x=layers.BatchNormalization()(x)
+#     x = tf.divide(x, tf.expand_dims(tf.norm(x, 2, -1), -1))
     h = x
     x = layers.Dense(filters[2] * (input_shape[0] // 8) * (input_shape[0] // 8), activation='relu')(x)
     x = layers.Reshape((input_shape[0] // 8, input_shape[0] // 8, filters[2]))(x)
@@ -104,7 +121,6 @@ def model_conv(load_weights=True):
     output = layers.Concatenate()([h,
                                    layers.Flatten()(x)])
     model = Model(inputs=input, outputs=output)
-    tf.keras.utils.plot_model()
     # model.summary()
     if load_weights:
         model.load_weights('exp.h5')
@@ -112,33 +128,22 @@ def model_conv(load_weights=True):
     return model
 
 
-def loss_train_base(y_true, y_pred):
-    y_true = layers.Flatten()(y_true)
-    y_pred = y_pred[:, hidden_units:]
-    return losses.mse(y_true, y_pred)
-
-
 def train_base():
+    def loss_train_base(y_true, y_pred):
+        y_true = layers.Flatten()(y_true)
+        y_pred = y_pred[:, hidden_units:]
+        return losses.mse(y_true, y_pred)
+
     model = model_conv(load_weights=False)
     model.compile(optimizer='adam', loss=loss_train_base)
     # model.compile(optimizer=tf.keras.optimizers.SGD(0.1,0.9), loss=loss_train_base)
-    ds = get_dataset_xx(ds_type=ds_name).shuffle(8000).batch(pretrain_batch_size)
-    model.fit(ds, epochs=200, verbose=2)
-    # for i in range(pretrain_epochs):
-    #     ds = get_dataset_xx(ds_type=ds_name).shuffle(8000).batch(pretrain_batch_size)
-    #     for image, _ in ds:
-    #         random = np.random.uniform()
-    #         if random < 0.2:
-    #             image = tf.image.random_contrast(image, 0.2, 0.5)
-    #         elif random < 0.5:
-    #             image = tf.image.random_brightness(image, 0.2)
-    #         loss = model.train_on_batch(image, image)
-    #     print(i, loss)
+    ds = get_dataset_xx(ds_name=ds_name).shuffle(10000).batch(batch_size_pretrain)
+    model.fit(ds, epochs=epoch_pretrain, verbose=0)
     model.save_weights('exp.h5')
 
 
 def show_reconstruct():
-    x, y = get_xy(ds_type=ds_name)
+    x, y = get_xy(ds_name=ds_name)
     import matplotlib.pyplot as plt
     i = 1
     model = model_conv()
@@ -168,83 +173,134 @@ def sorted_eig(X):
     return e_vals, e_vecs
 
 
-def train():
-    model = model_conv()
-    x, y = get_xy(ds_type=ds_name)
-    optimizer = tf.keras.optimizers.Adam()
-    update_interval = 40
-    loss_value = 0
-    index = 0
+def loss_finetuning(y_true, y_pred):
+    V = tf.reshape(y_true[0, hidden_units:], (hidden_units, hidden_units))
+    y_true = y_true[:, :hidden_units]
+    y_pred = tf.matmul(y_pred[:, :hidden_units], V)
+    return losses.mse(y_true, y_pred)
+
+
+def train_ds():
+    # Log_init
+    dir_log = time.strftime('log/time_%m_%d__%H_%M' + '_ds_' + ds_name + '/')
+    if not os.path.exists(dir_log):
+        os.makedirs(dir_log)
+    headers = ['Iter', 'ACC', 'NMI', 'Change_assignment', 'Time']
+    f_log = open(dir_log + 'log_train.csv', 'w+', newline='')
+    f_log_csv = csv.writer(f_log)
+    f_log_csv.writerow(headers)
+    f_log.flush()
+
+    x, y = get_xy(ds_name=ds_name)
     assignment = np.array([-1] * len(x))
-    index_array = np.arange(x.shape[0])
-    for ite in range(int(140 * 100)):
-        if ite % update_interval == 0:
-            H = model(x).numpy()[:, :hidden_units]
-            ans_kmeans = KMeans(n_clusters=n_clusters, n_init=100).fit(H)
-            U = ans_kmeans.cluster_centers_
-            assignment_new = ans_kmeans.labels_
+    model = model_conv()
+    model.compile(optimizer='adam', loss=loss_finetuning)
+    for iter in range(epoch_finetuning):
+        # H=f(X)
+        H = model.predict(x)[:, :hidden_units]
+        kmeans_H = KMeans(n_clusters=n_clusters, n_init=500, max_iter=15000).fit(H)
+        U = kmeans_H.cluster_centers_
+        assignment_new = kmeans_H.labels_
+        # 计算前后两轮U型能力，assignment变化了的样本个数
+        w = np.zeros((n_clusters, n_clusters), dtype=np.int64)
+        for i in range(len(assignment_new)):
+            w[assignment_new[i], assignment[i]] += 1
+        ind = linear_assignment(-w)
+        temp = np.array(assignment)
+        for i in range(n_clusters):
+            assignment[temp == ind[1][i]] = i
+        change_assignment = np.sum(assignment_new != assignment)
+        assignment = assignment_new
 
-            w = np.zeros((n_clusters, n_clusters), dtype=np.int64)
-            for i in range(len(assignment_new)):
-                w[assignment_new[i], assignment[i]] += 1
-            from scipy.optimize import linear_sum_assignment as linear_assignment
-            ind = linear_assignment(-w)
-            temp = np.array(assignment)
-            for i in range(n_clusters):
-                assignment[temp == ind[1][i]] = i
-            change_assignment = np.sum(assignment_new != assignment)
-            assignment = assignment_new
+        acc, nmi = get_ACC_NMI(np.array(y), np.array(assignment))
+        time_running = np.round(time.time() - time_start, 2)
+        print('ite %2d ,acc: %.5f, nmi: %.5f' % (iter, acc, nmi),
+              'change_assignment: ', change_assignment, 'time:', time_running)
 
-            S_i = []
-            for i in range(n_clusters):
-                temp = H[assignment == i] - U[i]
-                temp = np.matmul(np.transpose(temp), temp)
-                S_i.append(temp)
-            S_i = np.array(S_i)
-            S = np.sum(S_i, 0)
-            Evals, V = sorted_eig(S)
-            H_vt = np.matmul(H, V)  # 1000,5
-            U_vt = np.matmul(U, V)  # 10,5
-            #
-            loss = np.round(np.mean(loss_value), 5)
-            acc, nmi = get_ACC_NMI(np.array(y), np.array(assignment))
-            print('ite %2d ,acc: %.5f, nmi: %.5f, loss:%.5f' % (ite // update_interval, acc, nmi, loss),
-                  np.round(Evals[-5:], 2).astype(np.int), change_assignment)
+        if change_assignment <= len(x) * 0.001:
+            print('end')
+            model.save_weights('final.h5')
+            break
 
-        idx = index_array[index * batch_size: min((index + 1) * batch_size, x.shape[0])]
-        y_true = H_vt[idx]
-        temp = assignment[idx]
-        for i in range(len(idx)):
+        # log
+        ## 记录运行时间
+        row = [iter, acc, nmi, change_assignment, time_running]
+        f_log_csv.writerow(row)
+        f_log.flush()
+        ## 绘制embedding
+        # tsne = TSNE(n_components=2)
+        # x_2 = tsne.fit_transform(H, y)
+        # colormap = cm.hsv(np.linspace(0, 1, 10))
+        # plt.figure(0)
+        # plt.scatter(x_2[:, 0], x_2[:, 1], c=colormap[np.array(y, dtype=np.int)], s=1, marker='x')
+        # plt.axis('off')
+        # plt.savefig(dir_log + 'iter_' + str(iter) + '_time_' + str(time_running) + '.pdf', dpi=500, bbox_inches='tight')
+
+        S_i = []
+        for i in range(n_clusters):
+            temp = H[assignment == i] - U[i]
+            temp = np.matmul(np.transpose(temp), temp)
+            S_i.append(temp)
+        S_i = np.array(S_i)
+        S = np.sum(S_i, 0)
+        Evals, V = sorted_eig(S)
+        H_vt = np.matmul(H, V)  # 1000,5
+        U_vt = np.matmul(U, V)  # 10,5
+
+        # y_true = np.array(H_vt)
+        # for i in range(len(y_true)):
+        #     y_true[i, -1] = U_vt[assignment[i], -1]
+
+        y_true = H_vt[:]
+        temp = assignment[:]
+        for i in range(len(y_true)):
             y_true[i, -1] = U_vt[temp[i], -1]
 
-        with tf.GradientTape() as tape:
-            tape.watch(model.trainable_variables)
-            y_pred = model(x[idx])
-            y_pred_cluster = tf.matmul(y_pred[:, :hidden_units], V)
-            loss_value = losses.mse(y_true, y_pred_cluster)
-        grads = tape.gradient(loss_value, model.trainable_variables)
-        optimizer.apply_gradients(zip(grads, model.trainable_variables))
+        V_y = np.reshape(V, (1, -1))
+        V_y = np.tile(V_y, (len(y_true), 1))
+        y_true = np.concatenate([y_true, V_y], -1)
 
-        index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
+        # fine-tuning
+        ds = tf.data.Dataset.from_tensor_slices((x, y_true)).shuffle(10000).batch(batch_size_finetuning)
+        model.fit(ds, epochs=epoch_T, verbose=0)
+        # for x_batch, y_batch in ds.take(iteration_T):
+        #     model.train_on_batch(x_batch, y_batch)
+    model.save_weights('final.h5')
 
 
 if __name__ == '__main__':
-    pretrain_epochs = 100
-    pretrain_batch_size = 256
-    batch_size = 256
-    ds_name = 'USPS'
+    epoch_pretrain = 200
+    epoch_finetuning = 100
+    batch_size_pretrain = 256
+    batch_size_finetuning = 256
+    # iteration_T = 40
+    ds_name = 'MNIST'
     if ds_name == 'MNIST':
+        batch_size_pretrain = 512
+        batch_size_finetuning = 512
+        epoch_T = 1
         input_shape = (28, 28, 1)
         n_clusters = 10
         hidden_units = n_clusters
     elif ds_name == 'USPS':
+        epoch_T = 2
         input_shape = (16, 16, 1)
         n_clusters = 10
         hidden_units = n_clusters
     elif ds_name == 'COIL20':
+        epoch_T = 10
         input_shape = (28, 28, 1)
         n_clusters = 20
         hidden_units = n_clusters
+    elif ds_name == 'FRGC':
+        epoch_T = 10
+        input_shape = (32, 32, 3)
+        n_clusters = 20
+        hidden_units = n_clusters
+    import time
+
+    time_start = time.time()
     train_base()
     show_reconstruct()
-    train()
+    train_ds()
+    print(time.time() - time_start)
