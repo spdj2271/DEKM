@@ -2,7 +2,7 @@
 DeepKmeans
 
 ## result
-
+Best result of five runs:
 |            | MNIST  |        | USPS   |        | COIL-20 |        | FRGC   |        |
 | ---------- | ------ | ------ | ------ | ------ | ------- | ------ | ------ | ------ |
 | Method     | ACC    | NMI    | ACC    | NMI    | ACC     | NMI    | ACC    | NMI    |
