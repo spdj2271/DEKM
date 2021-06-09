@@ -255,7 +255,7 @@ if __name__ == '__main__':
     pretrain_epochs = 200
     pretrain_batch_size = 256
     batch_size = 256
-    ds_name = 'COIL20'
+    ds_name = 'MNIST'
     if ds_name == 'MNIST':
         input_shape = (28, 28, 1)
         n_clusters = 10
