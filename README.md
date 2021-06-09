@@ -1,7 +1,10 @@
 # DeepKmeans: Deep Embedded K-means Clustering
 DeepKmeans
 
-## result
+## Usage
+Run python deepkmeans.py  to run experiment. The dataset is specified by $ds_name$, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
+
+## Result
 Best result of five runs:
 |            | MNIST  |        | USPS   |        | COIL-20 |        | FRGC   |        |
 | ---------- | ------ | ------ | ------ | ------ | ------- | ------ | ------ | ------ |
