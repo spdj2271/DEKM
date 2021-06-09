@@ -14,7 +14,7 @@ cd DeepKmeans
 python DeepKmeans.py
 ```
 
-3)  Launch an experiment other dataset, e.g., 'MNIST', 'USPS', 'COIL20', 'FRGC'.
+3)  Launch an experiment on other dataset, e.g., 'USPS', 'COIL20', 'FRGC'.
 ```
 python DeepKmeans.py USPS
 ```
