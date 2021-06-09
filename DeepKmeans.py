@@ -255,7 +255,17 @@ if __name__ == '__main__':
     pretrain_epochs = 200
     pretrain_batch_size = 256
     batch_size = 256
-    ds_name = 'MNIST'
+    import argparse
+
+    parser = argparse.ArgumentParser(description='select dataset:MNIST,COIL20,FRGC,USPS')
+    parser.add_argument('ds_name', type=str)
+
+    args = parser.parse_args()
+    if args.ds_name in ['MNIST','USPS','FRGC','COIL20']:
+        ds_name=args.ds_name
+    else:
+        ds_name='MNIST'
+
     if ds_name == 'MNIST':
         input_shape = (28, 28, 1)
         n_clusters = 10
