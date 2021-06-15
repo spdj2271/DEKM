@@ -22,11 +22,11 @@ python DeepKmeans.py USPS
 
 
 ## Result
-Best result of five runs:
+average results of three runs:
 |            | MNIST  |        | USPS   |        | COIL-20 |        | FRGC   |        |
 | ---------- | ------ | ------ | ------ | ------ | ------- | ------ | ------ | ------ |
 | Method     | ACC    | NMI    | ACC    | NMI    | ACC     | NMI    | ACC    | NMI    |
-| DeepKmeans | 96.744 | 92.446 | 79.297 | 80.921 | 75.069  | 82.898 | 38.911 | 51.143 |
+| DeepKmeans | 95.75 | 91.06 | 79.75 | 82.23 | 69.03  | 80.06 | 38.59 | 50.78 |
 
 ## Dependencies
 tensorflow 2.4.1
