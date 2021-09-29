@@ -1,22 +1,22 @@
 # Deep Embedded K-means Clustering
-DeepKmeans
+DEKM
 
 ## Usage
 
 1) Clone the code to local.
 ```
-git clone https://github.com/spdj2271/DeepKmeans.git DeepKmeans
+git clone https://github.com/spdj2271/DEKM.git DEKM
 ```
 2) Launch an experiment on MNIST dataset.
 
 ```
-cd DeepKmeans
-python DeepKmeans.py
+cd DEKM
+python DEKM.py
 ```
 
 3)  Launch an experiment on other dataset, e.g., 'USPS', 'COIL20', 'FRGC'.
 ```
-python DeepKmeans.py USPS
+python DEKM.py USPS
 ```
 
 
