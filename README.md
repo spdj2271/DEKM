@@ -1,4 +1,4 @@
-# DeepKmeans: Deep Embedded K-means Clustering
+# Deep Embedded K-means Clustering
 DeepKmeans
 
 ## Usage
@@ -26,7 +26,7 @@ average results of three runs:
 |            | MNIST  |        | USPS   |        | COIL-20 |        | FRGC   |        |
 | ---------- | ------ | ------ | ------ | ------ | ------- | ------ | ------ | ------ |
 | Method     | ACC    | NMI    | ACC    | NMI    | ACC     | NMI    | ACC    | NMI    |
-| DeepKmeans | 95.75 | 91.06 | 79.75 | 82.23 | 69.03  | 80.06 | 38.59 | 50.78 |
+| DEKM | 95.75 | 91.06 | 79.75 | 82.23 | 69.03  | 80.06 | 38.59 | 50.78 |
 
 ## Dependencies
 tensorflow 2.4.1
