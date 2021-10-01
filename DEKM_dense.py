@@ -8,6 +8,7 @@ from utils import get_ACC_NMI
 from utils import get_xy
 from utils import log_csv
 import time
+import argparse
 
 
 def model_conv(load_weights=True):
@@ -135,7 +136,15 @@ if __name__ == '__main__':
     pretrain_batch_size = 256
     batch_size = 256
     update_interval = 10
-    ds_name = 'RCV1'
+    
+    parser = argparse.ArgumentParser(description='select dataset:MNIST,COIL20,FRGC,USPS')
+    parser.add_argument('ds_name', type=str)
+    args = parser.parse_args()
+    if args.ds_name in ['MNIST','USPS','FRGC','COIL20']:
+        ds_name=args.ds_name
+    else:
+        ds_name='REUTERS'
+        
     if ds_name == 'REUTERS':
         input_shape = 2000
         n_clusters = 4
