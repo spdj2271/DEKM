@@ -137,13 +137,13 @@ if __name__ == '__main__':
     batch_size = 256
     update_interval = 10
     
-    parser = argparse.ArgumentParser(description='select dataset:MNIST,COIL20,FRGC,USPS')
-    parser.add_argument('ds_name', type=str)
+    parser = argparse.ArgumentParser(description='select dataset:REUTERS,20NEWS,RCV1')
+    parser.add_argument('ds_name', default='REUTERS')
     args = parser.parse_args()
-    if args.ds_name in ['MNIST','USPS','FRGC','COIL20']:
-        ds_name=args.ds_name
+    if args.ds_name is None or not args.ds_name in ['REUTERS', '20NEWS', 'RCV1']:
+        ds_name = 'REUTERS'
     else:
-        ds_name='REUTERS'
+        ds_name = args.ds_name
         
     if ds_name == 'REUTERS':
         input_shape = 2000
