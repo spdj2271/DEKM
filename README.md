@@ -46,7 +46,7 @@ python DEKM.py USPS
 ```
 
 ## Result
-average results of three runs:
+Average results of three runs:
 | Dataset    | ACC   | MNI   |
 |------------|-------|-------|
 | Conv       |       |       |
