@@ -3,7 +3,7 @@ DEKM
 
 ## Usage
 
-1) Clone the code to local.
+1) Clone the code locally.
 ```
 git clone https://github.com/spdj2271/DEKM.git DEKM
 ```
