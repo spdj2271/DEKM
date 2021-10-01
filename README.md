@@ -1,5 +1,5 @@
 # Deep Embedded K-means Clustering
-DEKM
+[DEKM](https://arxiv.org/abs/2109.15149)
 
 ## Usage
 
