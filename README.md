@@ -19,7 +19,7 @@ python DEKM.py MNIST
 python DEKM.py USPS
 ```
 - All datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing). 
-- When launch experiments on other datasets (except 'MNIST'), you should make sure you have the following directory structure:
+- When launch experiments on other datasets (except 'MNIST'), you should make sure you have the following folder structure:
 ```
 |-- undefined
     |-- DEKM.py
