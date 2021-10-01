@@ -19,6 +19,7 @@ python DEKM.py
 python DEKM.py USPS
 ```
 When launch experiments on ther datasets (except 'MNIST'), all datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing) and you should make sure you have the following directory structure:
+```
 |-- undefined
     |-- DEKM.py
     |-- DEKM_dense.py
@@ -41,9 +42,7 @@ When launch experiments on ther datasets (except 'MNIST'), all datasets can be d
     |   |   |-- 10k_target.npy
     |   |-- USPS
     |       |-- USPS.h5
-
-## Dataset
-
+```
 
 ## Result
 average results of three runs:
