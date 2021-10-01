@@ -47,12 +47,12 @@ python DEKM.py USPS
 
 ## Result
 Average results of three runs:
-| Conv dataset    | ACC   | MNI   | Dense dataset    | ACC   | MNI   |
-
-| MNIST      | 95.75 | 91.06 |   REUTES-10K | 76.28 | 59.06 |
-| USPS       | 79.75 | 82.23 |20NEWS     | 41.08 | 40.28 |
-| COIL-20    | 69.03 | 80.06 |RCV1-10K   | 67.15 | 46.18 |
-| FRGC       | 38.59 | 50.78 ||||
+| Conv dataset | ACC   | MNI   | Dense dataset | ACC   | MNI   |
+|--------------|-------|-------|---------------|-------|-------|
+| MNIST        | 95.75 | 91.06 | REUTES-10K    | 76.28 | 59.06 |
+| USPS         | 79.75 | 82.23 | 20NEWS        | 41.08 | 40.28 |
+| COIL-20      | 69.03 | 80.06 | RCV1-10K      | 67.15 | 46.18 |
+| FRGC         | 38.59 | 50.78 |               |       |       |
 
 ## Dependencies
 tensorflow 2.4.1
