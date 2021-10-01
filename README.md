@@ -18,9 +18,25 @@ python DEKM.py
 ```
 python DEKM.py USPS
 ```
+When launch experiments on ther datasets (except 'MNIST'), all datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing) and you should make sure you have the following directory structure:
+|-- dataset
+|-- babel.config.js
+|-- package-lock.json
+|-- package.json
+|-- README.md
+|-- public
+|   |-- favicon.ico
+|   |-- index.html
+|-- src
+    |-- App.vue
+    |-- main.js
+    |-- assets
+    |   |-- logo.png
+    |-- components
+    |   |-- HelloWorld.vue
 
 ## Dataset
-All datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing).
+
 
 ## Result
 average results of three runs:
