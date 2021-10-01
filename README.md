@@ -11,7 +11,7 @@ git clone https://github.com/spdj2271/DEKM.git DEKM
 
 ```
 cd DEKM
-python DEKM.py
+python DEKM.py MNIST
 ```
 
 3)  Launch an experiment on other dataset, e.g., 'USPS', 'COIL20', 'FRGC'. 
