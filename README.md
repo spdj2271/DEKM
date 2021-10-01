@@ -19,7 +19,8 @@ python DEKM.py
 python DEKM.py USPS
 ```
 
-
+## Dataset
+All datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing).
 
 ## Result
 average results of three runs:
