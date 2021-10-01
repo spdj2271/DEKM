@@ -47,7 +47,7 @@ python DEKM.py USPS
 
 ## Result
 Average results of three runs:
-| Conv dataset | ACC   | MNI   | Dense dataset | ACC   | MNI   |
+| image (Conv) dataset | ACC   | MNI   | text (Dense) dataset | ACC   | MNI   |
 |--------------|-------|-------|---------------|-------|-------|
 | MNIST        | 95.75 | 91.06 | REUTES-10K    | 76.28 | 59.06 |
 | USPS         | 79.75 | 82.23 | 20NEWS        | 41.08 | 40.28 |
