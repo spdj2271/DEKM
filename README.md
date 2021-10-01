@@ -68,6 +68,7 @@ numpy 1.19.5
 scipy 1.2.1
 
 ## Cite us
+```
 @misc{guo2021deep,
       title={Deep Embedded K-Means Clustering}, 
       author={Wengang Guo and Kaiyan Lin and Wei Ye},
@@ -76,3 +77,4 @@ scipy 1.2.1
       archivePrefix={arXiv},
       primaryClass={cs.LG}
 }
+```
