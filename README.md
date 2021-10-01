@@ -66,3 +66,13 @@ scikit-learn 0.23.2
 numpy 1.19.5
 
 scipy 1.2.1
+
+## Cite us
+@misc{guo2021deep,
+      title={Deep Embedded K-Means Clustering}, 
+      author={Wengang Guo and Kaiyan Lin and Wei Ye},
+      year={2021},
+      eprint={2109.15149},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
