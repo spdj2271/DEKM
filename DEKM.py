@@ -10,7 +10,7 @@ from utils import log_csv
 import time
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import argparse
 
 def model_conv(load_weights=True):
     # init = VarianceScaling(scale=1. / 3., mode='fan_in', distribution='uniform')
@@ -144,7 +144,15 @@ if __name__ == '__main__':
     batch_size = 256
     update_interval = 40
     hidden_units = 10
-    ds_name = 'MNIST'
+
+    parser = argparse.ArgumentParser(description='select dataset:MNIST,COIL20,FRGC,USPS')
+    parser.add_argument('ds_name', type=str)
+    args = parser.parse_args()
+    if args.ds_name in ['MNIST','USPS','FRGC','COIL20']:
+        ds_name=args.ds_name
+    else:
+        ds_name='MNIST'
+        
     if ds_name == 'MNIST':
         input_shape = (28, 28, 1)
         n_clusters = 10
