@@ -14,11 +14,12 @@ cd DEKM
 python DEKM.py
 ```
 
-3)  Launch an experiment on other dataset, e.g., 'USPS', 'COIL20', 'FRGC'.
+3)  Launch an experiment on other dataset, e.g., 'USPS', 'COIL20', 'FRGC'. 
 ```
 python DEKM.py USPS
 ```
-When launch experiments on ther datasets (except 'MNIST'), all datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing) and you should make sure you have the following directory structure:
+- All datasets can be downloaded [here](https://drive.google.com/drive/folders/1raiYP1joy8gtsHXYcW5EuNtECSPRu37v?usp=sharing). 
+- When launch experiments on ther datasets (except 'MNIST'), you should make sure you have the following directory structure:
 ```
 |-- undefined
     |-- DEKM.py
