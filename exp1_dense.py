@@ -8,27 +8,35 @@ from utils import get_ACC_NMI
 from utils import get_xy
 from utils import log_csv
 import time
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def model_conv(load_weights=True):
-    # 2000; 1000; 1000; 1000; 50
-    #  d–500–500–2000–10
-    filters = [500, 500, 2000]
+    # init = VarianceScaling(scale=1. / 3., mode='fan_in', distribution='uniform')
     init = 'uniform'
-    activation = 'relu'
+    filters = [32, 64, 128, hidden_units]
+    if input_shape[0] % 8 == 0:
+        pad3 = 'same'
+    else:
+        pad3 = 'valid'
     input = layers.Input(shape=input_shape)
-    x = input
-    for i in range(len(filters)):
-        x = layers.Dense(filters[i], activation=activation, kernel_initializer=init)(x)
-    x = layers.Dense(hidden_units, kernel_initializer=init)(x)
-    # x = tf.divide(x, tf.expand_dims(tf.norm(x, 2, -1), -1))
+    x = layers.Conv2D(filters[0], kernel_size=5, strides=2, padding='same', activation='relu', kernel_initializer=init)(
+        input)
+    x = layers.Conv2D(filters[1], kernel_size=5, strides=2, padding='same', activation='relu', kernel_initializer=init)(
+        x)
+    x = layers.Conv2D(filters[2], kernel_size=3, strides=2, padding=pad3, activation='relu', kernel_initializer=init)(x)
+    x = layers.Flatten()(x)
+    x = layers.Dense(units=filters[-1], name='embed')(x)
+#     x = tf.divide(x, tf.expand_dims(tf.norm(x, 2, -1), -1))
     h = x
-
-    for i in range(len(filters) - 1, -1, -1):
-        x = layers.Dense(filters[i], activation=activation, kernel_initializer=init)(x)
-    y = layers.Dense(input_shape, kernel_initializer=init)(x)
-
-    output = layers.Concatenate()([h, y])
+    x = layers.Dense(filters[2] * (input_shape[0] // 8) * (input_shape[0] // 8), activation='relu')(x)
+    x = layers.Reshape((input_shape[0] // 8, input_shape[0] // 8, filters[2]))(x)
+    x = layers.Conv2DTranspose(filters[1], kernel_size=3, strides=2, padding=pad3, activation='relu')(x)
+    x = layers.Conv2DTranspose(filters[0], kernel_size=5, strides=2, padding='same', activation='relu')(x)
+    x = layers.Conv2DTranspose(input_shape[2], kernel_size=5, strides=2, padding='same')(x)
+    output = layers.Concatenate()([h,
+                                   layers.Flatten()(x)])
     model = Model(inputs=input, outputs=output)
     # model.summary()
     if load_weights:
@@ -60,7 +68,7 @@ def sorted_eig(X):
 
 def train(x, y):
     log_str = f'iter; acc, nmi, ri ; loss; n_changed_assignment; time:{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}'
-    log_csv(log_str.split(';'),file_name=ds_name)
+    log_csv(log_str.split(';'), file_name=ds_name)
     model = model_conv()
 
     optimizer = tf.keras.optimizers.Adam()
@@ -104,13 +112,13 @@ def train(x, y):
             acc, nmi = get_ACC_NMI(np.array(y), np.array(assignment))
 
             # log
-            log_str = f'iter {ite // update_interval}; acc, nmi, ri = {acc, nmi}; loss:' \
-                      f'{loss}; n_changed_assignment:{n_change_assignment}; time:{time.time() - time_start:.3f}'
+            log_str = f'iter {ite // update_interval}; acc, nmi, ri = {acc, nmi, loss}; loss:' \
+                      f'{loss:.5f}; n_changed_assignment:{n_change_assignment}; time:{time.time() - time_start:.3f}'
             print(log_str)
-            log_csv(log_str.split(';'),file_name=ds_name)
+            log_csv(log_str.split(';'), file_name=ds_name)
 
         if n_change_assignment <= len(x) * 0.005:
-            model.save_weights(f'weight_final_{ds_name}.h5')
+            model.save_weights(f'weight_final_l2_{ds_name}.h5')
             print('end')
             break
         idx = index_array[index * batch_size: min((index + 1) * batch_size, x.shape[0])]
@@ -134,21 +142,21 @@ if __name__ == '__main__':
     pretrain_epochs = 200
     pretrain_batch_size = 256
     batch_size = 256
-    update_interval = 10
-    ds_name = 'RCV1'
-    if ds_name == 'REUTERS':
-        input_shape = 2000
-        n_clusters = 4
-        hidden_units = 10
-        batch_size=10000
-    elif ds_name == '20NEWS':
-        input_shape = 2000
+    update_interval = 40
+    hidden_units = 10
+    ds_name = 'FRGC'
+    if ds_name == 'MNIST':
+        input_shape = (28, 28, 1)
+        n_clusters = 10
+    elif ds_name == 'USPS':
+        input_shape = (16, 16, 1)
+        n_clusters = 10
+    elif ds_name == 'COIL20':
+        input_shape = (28, 28, 1)
         n_clusters = 20
-        hidden_units = 10
-    elif ds_name == 'RCV1':
-        input_shape = 2000
-        n_clusters = 4
-        hidden_units = 10
+    elif ds_name == 'FRGC':
+        input_shape = (32, 32, 3)
+        n_clusters = 20
 
     time_start = time.time()
     x, y = get_xy(ds_name=ds_name)
