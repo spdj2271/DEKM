@@ -146,12 +146,12 @@ if __name__ == '__main__':
     hidden_units = 10
 
     parser = argparse.ArgumentParser(description='select dataset:MNIST,COIL20,FRGC,USPS')
-    parser.add_argument('ds_name', type=str)
+    parser.add_argument('ds_name', default='MNIST')
     args = parser.parse_args()
-    if args.ds_name in ['MNIST','USPS','FRGC','COIL20']:
-        ds_name=args.ds_name
+    if args.ds_name is None or not args.ds_name in ['MNIST', 'FRGC', 'COIL20', 'USPS']:
+        ds_name = 'MNIST'
     else:
-        ds_name='MNIST'
+        ds_name = args.ds_name
         
     if ds_name == 'MNIST':
         input_shape = (28, 28, 1)
