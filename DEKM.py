@@ -144,7 +144,7 @@ if __name__ == '__main__':
     batch_size = 256
     update_interval = 40
     hidden_units = 10
-    ds_name = 'FRGC'
+    ds_name = 'MNIST'
     if ds_name == 'MNIST':
         input_shape = (28, 28, 1)
         n_clusters = 10
