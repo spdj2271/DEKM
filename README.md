@@ -63,8 +63,9 @@ numpy 1.19.5
 
 scipy 1.2.1
 
-## Cite us
+## Citations
 ```
+If you find our project helpful, your citations are highly appreciated:
 @misc{guo2021deep,
       title={Deep Embedded K-Means Clustering}, 
       author={Wengang Guo and Kaiyan Lin and Wei Ye},
