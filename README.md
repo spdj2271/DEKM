@@ -1,5 +1,5 @@
 # Deep Embedded K-means Clustering
-[DEKM](https://arxiv.org/abs/2109.15149)
+[Paper](https://arxiv.org/pdf/2109.15149.pdf)
 
 ## Usage
 
@@ -66,12 +66,12 @@ scipy 1.2.1
 ## Citations
 If you find our project helpful, your citations are highly appreciated:
 ```
-@misc{guo2021deep,
-      title={Deep Embedded K-Means Clustering}, 
-      author={Wengang Guo and Kaiyan Lin and Wei Ye},
-      year={2021},
-      eprint={2109.15149},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@inproceedings{guo2021deep,
+  title={Deep Embedded K-Means Clustering},
+  author={Guo, Wengang and Lin, Kaiyan and Ye, Wei},
+  booktitle={2021 International Conference on Data Mining Workshops (ICDMW)},
+  pages={686--694},
+  year={2021},
+  organization={IEEE}
 }
 ```
