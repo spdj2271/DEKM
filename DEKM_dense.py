@@ -149,7 +149,7 @@ if __name__ == '__main__':
         input_shape = 2000
         n_clusters = 4
         hidden_units = 10
-        batch_size=10000
+        # batch_size=10000
     elif ds_name == '20NEWS':
         input_shape = 2000
         n_clusters = 20
