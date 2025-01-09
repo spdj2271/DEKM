@@ -128,7 +128,7 @@ def train(x, y):
             y_true[i, -1] = U_vt[temp[i], -1]
 
         with tf.GradientTape() as tape:
-            tape.watch(model.trainable_variables)
+            # tape.watch(model.trainable_variables)
             y_pred = model(x[idx])
             y_pred_cluster = tf.matmul(y_pred[:, :hidden_units], V)
             loss_value = losses.mse(y_true, y_pred_cluster)
