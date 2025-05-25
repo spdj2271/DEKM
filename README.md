@@ -63,6 +63,11 @@ numpy 1.19.5
 
 scipy 1.2.1
 
+## Additional Implementations
+
+- PyTorch implementation is available at: [https://github.com/shyhyawJou/DEKM-Pytorch](https://github.com/shyhyawJou/DEKM-Pytorch)
+
+    
 ## Citations
 If you find our project helpful, your citations are highly appreciated:
 ```
