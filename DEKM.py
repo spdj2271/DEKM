@@ -8,8 +8,6 @@ from utils import get_ACC_NMI
 from utils import get_xy
 from utils import log_csv
 import time
-import matplotlib.pyplot as plt
-import seaborn as sns
 import argparse
 
 def model_conv(load_weights=True):
@@ -172,3 +170,4 @@ if __name__ == '__main__':
     train_base(ds_xx)
     train(x, y)
     print(time.time() - time_start)
+
